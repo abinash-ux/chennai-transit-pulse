@@ -46,8 +46,8 @@ const passengerNavItems = [
 const driverNavItems = [
   { to: '/dashboard/driver', icon: LayoutDashboard, label: 'Overview' },
   { to: '/dashboard/driver/route', icon: MapPin, label: 'My Route' },
-  { to: '/dashboard/driver/alerts', icon: Bell, label: 'Alerts' },
   { to: '/dashboard/driver/sos', icon: AlertTriangle, label: 'SOS' },
+  { to: '/dashboard/driver/performance', icon: Receipt, label: 'Performance' },
   { to: '/dashboard/driver/requests', icon: Bus, label: 'Bus Requests' },
 ];
 
@@ -73,6 +73,7 @@ const adminNavItems = [
   { to: '/dashboard/admin/revenue', icon: Receipt, label: 'Revenue' },
   { to: '/dashboard/admin/complaints', icon: MessageSquare, label: 'Complaints' },
   { to: '/dashboard/admin/sos', icon: AlertTriangle, label: 'SOS Center' },
+  { to: '/dashboard/admin/users', icon: User, label: 'Users' },
 ];
 
 const roleNavItems: Record<string, typeof passengerNavItems> = {
