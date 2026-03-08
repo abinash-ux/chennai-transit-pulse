@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Bus, Ticket, Wallet, MapPin, AlertTriangle, CreditCard, Calendar } from 'lucide-react';
+import { Bus, Ticket, Wallet, MapPin, AlertTriangle, CreditCard, Calendar, Navigation } from 'lucide-react';
 import { StatCard } from '@/components/ui/stat-card';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Button } from '@/components/ui/button';
@@ -9,10 +9,11 @@ export default function PassengerDashboard() {
   const navigate = useNavigate();
 
   const quickActions = [
+    { icon: Navigation, label: 'Trip Planner', to: '/dashboard/passenger/planner', color: 'text-secondary' },
     { icon: MapPin, label: 'Track Bus', to: '/dashboard/passenger/track', color: 'text-primary' },
     { icon: Ticket, label: 'Buy Ticket', to: '/dashboard/passenger/tickets', color: 'text-success' },
     { icon: Wallet, label: 'Add Funds', to: '/dashboard/passenger/wallet', color: 'text-warning' },
-    { icon: Calendar, label: 'Get Pass', to: '/dashboard/passenger/pass', color: 'text-secondary' },
+    { icon: Calendar, label: 'Get Pass', to: '/dashboard/passenger/pass', color: 'text-primary' },
   ];
 
   return (
