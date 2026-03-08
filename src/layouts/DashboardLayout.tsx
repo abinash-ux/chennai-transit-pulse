@@ -15,12 +15,14 @@ import {
   LogOut,
   Menu,
   X,
-  User
+  User,
+  Navigation as NavigationIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { SidebarNavItem } from '@/components/SidebarNavItem';
 import { useAuth } from '@/lib/auth';
+import { NotificationPanel, useUnreadCount } from '@/components/NotificationPanel';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +33,7 @@ import {
 
 const passengerNavItems = [
   { to: '/dashboard/passenger', icon: LayoutDashboard, label: 'Overview' },
+  { to: '/dashboard/passenger/planner', icon: NavigationIcon, label: 'Trip Planner' },
   { to: '/dashboard/passenger/track', icon: MapPin, label: 'Track Bus' },
   { to: '/dashboard/passenger/tickets', icon: Ticket, label: 'My Tickets' },
   { to: '/dashboard/passenger/wallet', icon: Wallet, label: 'Wallet' },
@@ -91,8 +94,10 @@ const roleLabels: Record<string, string> = {
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const { user, userRole, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const unreadCount = useUnreadCount();
 
   const navItems = roleNavItems[userRole || 'passenger'] || passengerNavItems;
 
@@ -256,12 +261,17 @@ export default function DashboardLayout() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold flex items-center justify-center text-primary-foreground">
-                3
-              </span>
-            </Button>
+            <div className="relative">
+              <Button variant="ghost" size="icon" className="relative" onClick={() => setNotifOpen(!notifOpen)}>
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold flex items-center justify-center text-primary-foreground">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </Button>
+              <NotificationPanel open={notifOpen} onClose={() => setNotifOpen(false)} />
+            </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
