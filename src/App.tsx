@@ -12,6 +12,11 @@ import PassengerDashboard from "./pages/passenger/PassengerDashboard";
 import TrackBus from "./pages/passenger/TrackBus";
 import PassengerTickets from "./pages/passenger/PassengerTickets";
 import PassengerWallet from "./pages/passenger/PassengerWallet";
+import TripPlanner from "./pages/passenger/TripPlanner";
+import MonthlyPass from "./pages/passenger/MonthlyPass";
+import RerouteRequest from "./pages/passenger/RerouteRequest";
+import Complaints from "./pages/passenger/Complaints";
+import MyFines from "./pages/passenger/MyFines";
 import DriverDashboard from "./pages/driver/DriverDashboard";
 import ConductorDashboard from "./pages/conductor/ConductorDashboard";
 import InspectorDashboard from "./pages/inspector/InspectorDashboard";
@@ -36,6 +41,11 @@ const App = () => (
                 <Route path="passenger/track" element={<TrackBus />} />
                 <Route path="passenger/tickets" element={<PassengerTickets />} />
                 <Route path="passenger/wallet" element={<PassengerWallet />} />
+                <Route path="passenger/planner" element={<TripPlanner />} />
+                <Route path="passenger/pass" element={<MonthlyPass />} />
+                <Route path="passenger/reroute" element={<RerouteRequest />} />
+                <Route path="passenger/complaints" element={<Complaints />} />
+                <Route path="passenger/fines" element={<MyFines />} />
                 <Route path="passenger/*" element={<PassengerDashboard />} />
                 <Route path="driver" element={<DriverDashboard />} />
                 <Route path="driver/*" element={<DriverDashboard />} />

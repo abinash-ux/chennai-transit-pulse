@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { SidebarNavItem } from '@/components/SidebarNavItem';
 import { useAuth } from '@/lib/auth';
+import { NotificationPanel, useUnreadCount } from '@/components/NotificationPanel';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +32,7 @@ import {
 
 const passengerNavItems = [
   { to: '/dashboard/passenger', icon: LayoutDashboard, label: 'Overview' },
+  { to: '/dashboard/passenger/planner', icon: Navigation, label: 'Trip Planner' },
   { to: '/dashboard/passenger/track', icon: MapPin, label: 'Track Bus' },
   { to: '/dashboard/passenger/tickets', icon: Ticket, label: 'My Tickets' },
   { to: '/dashboard/passenger/wallet', icon: Wallet, label: 'Wallet' },
