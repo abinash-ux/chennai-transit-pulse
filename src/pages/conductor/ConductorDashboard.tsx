@@ -137,7 +137,7 @@ export default function ConductorDashboard() {
         <StatCard title="Tickets Issued" value={stats.ticketsIssued} icon={Ticket} />
         <StatCard title="Cash Revenue" value={stats.cashRevenue} prefix="₹" icon={Banknote} />
         <StatCard title="Digital Revenue" value={stats.digitalRevenue} prefix="₹" icon={CreditCard} />
-        <StatCard title="Bus Load" value={`${occupancy}/${total}`} icon={Users} />
+        <StatCard title="Bus Load" value={occupancy} suffix={`/${total}`} icon={Users} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">

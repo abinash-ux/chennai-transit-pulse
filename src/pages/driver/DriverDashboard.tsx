@@ -63,7 +63,7 @@ export default function DriverDashboard() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Assigned Bus" value={bus?.bus_number || 'None'} icon={Bus} />
-        <StatCard title="Passengers" value={`${occupancy}/${total}`} icon={Users} />
+        <StatCard title="Passengers" value={occupancy} suffix={`/${total}`} icon={Users} />
         <StatCard title="Today's Tickets" value={todayTickets} icon={Navigation} />
         <StatCard title="Occupancy" value={pct} suffix="%" icon={Clock} />
       </div>
