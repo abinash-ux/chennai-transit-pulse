@@ -15,7 +15,8 @@ import {
   LogOut,
   Menu,
   X,
-  User
+  User,
+  Navigation as NavigationIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,7 @@ import {
 
 const passengerNavItems = [
   { to: '/dashboard/passenger', icon: LayoutDashboard, label: 'Overview' },
-  { to: '/dashboard/passenger/planner', icon: Navigation, label: 'Trip Planner' },
+  { to: '/dashboard/passenger/planner', icon: NavigationIcon, label: 'Trip Planner' },
   { to: '/dashboard/passenger/track', icon: MapPin, label: 'Track Bus' },
   { to: '/dashboard/passenger/tickets', icon: Ticket, label: 'My Tickets' },
   { to: '/dashboard/passenger/wallet', icon: Wallet, label: 'Wallet' },
