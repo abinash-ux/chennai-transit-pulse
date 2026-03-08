@@ -94,8 +94,10 @@ const roleLabels: Record<string, string> = {
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const { user, userRole, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const unreadCount = useUnreadCount();
 
   const navItems = roleNavItems[userRole || 'passenger'] || passengerNavItems;
 
