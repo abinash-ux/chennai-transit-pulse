@@ -140,8 +140,8 @@ export default function AdminDashboard() {
               <div>
                 <p className="text-sm font-semibold text-destructive mb-2">🔴 Overcrowded ({overcrowded.length})</p>
                 {overcrowded.slice(0, 3).map((bus) => {
-                  const pct = Math.round((bus.current_occupancy / bus.total_seats) * 100);
-                  return (
+                  const pct = Math.round((bus.current_occupancy / TOTAL_CAPACITY) * 100);
+                    return (
                     <div key={bus.id} className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 mb-2 cursor-pointer hover:bg-destructive/20 transition-colors"
                       onClick={() => navigate('/dashboard/admin/fleet')}>
                       <div className="flex justify-between items-center">
