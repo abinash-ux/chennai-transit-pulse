@@ -56,8 +56,9 @@ export default function AdminDashboard() {
   const activeAlerts = sosAlerts.filter(a => a.status === 'active').length;
   const pendingComplaints = complaints.filter(c => c.status === 'pending').length;
   const pendingReroutes = rerouteRequests.filter(r => r.status === 'pending').length;
-  const overcrowded = buses.filter(b => b.total_seats && (b.current_occupancy / b.total_seats) > 0.9);
-  const underutilized = buses.filter(b => b.total_seats && (b.current_occupancy / b.total_seats) < 0.3);
+  const TOTAL_CAPACITY = 70;
+  const overcrowded = buses.filter(b => (b.current_occupancy / TOTAL_CAPACITY) > 0.9);
+  const underutilized = buses.filter(b => (b.current_occupancy / TOTAL_CAPACITY) < 0.3);
 
   const QuickAction = ({ title, value, color, icon: Icon, onClick, subtitle }: any) => (
     <GlassCard className="cursor-pointer hover:border-primary/50 transition-all hover:scale-[1.02]" onClick={onClick}>
