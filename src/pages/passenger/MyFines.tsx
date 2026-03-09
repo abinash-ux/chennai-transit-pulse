@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Receipt, Loader2, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Receipt, Loader2, AlertTriangle, CheckCircle, Clock, CreditCard, Smartphone, Wallet } from 'lucide-react';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/lib/auth';
+
+type PaymentMethod = 'wallet' | 'card' | 'upi';
 
 export default function MyFines() {
   const { user } = useAuth();
@@ -15,6 +19,7 @@ export default function MyFines() {
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState<string | null>(null);
   const [confirmFine, setConfirmFine] = useState<any | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('wallet');
 
   useEffect(() => {
     if (user) fetchFines();
@@ -34,43 +39,44 @@ export default function MyFines() {
     if (!user) return;
     setPaying(fine.id);
 
-    // Get wallet
-    const { data: wallet } = await supabase
-      .from('wallets')
-      .select('id, balance')
-      .eq('user_id', user.id)
-      .single();
+    if (paymentMethod === 'wallet') {
+      // Wallet payment — check balance
+      const { data: wallet } = await supabase
+        .from('wallets')
+        .select('id, balance')
+        .eq('user_id', user.id)
+        .single();
 
-    if (!wallet || wallet.balance < fine.amount) {
-      toast.error('Insufficient wallet balance. Please add funds first.');
-      setPaying(null);
-      setConfirmFine(null);
-      return;
+      if (!wallet || wallet.balance < fine.amount) {
+        toast.error('Insufficient wallet balance. Please add funds or choose another payment method.');
+        setPaying(null);
+        return;
+      }
+
+      const { error: walletError } = await supabase
+        .from('wallets')
+        .update({ balance: wallet.balance - fine.amount })
+        .eq('id', wallet.id);
+
+      if (walletError) {
+        toast.error('Payment failed: ' + walletError.message);
+        setPaying(null);
+        return;
+      }
+
+      await supabase.from('wallet_transactions').insert({
+        wallet_id: wallet.id,
+        amount: fine.amount,
+        transaction_type: 'debit',
+        description: `Fine Payment - ${fine.violation_type}`,
+        reference_id: fine.id,
+      });
+    } else {
+      // Card / UPI — simulate processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
     }
 
-    // Deduct from wallet
-    const { error: walletError } = await supabase
-      .from('wallets')
-      .update({ balance: wallet.balance - fine.amount })
-      .eq('id', wallet.id);
-
-    if (walletError) {
-      toast.error('Payment failed: ' + walletError.message);
-      setPaying(null);
-      setConfirmFine(null);
-      return;
-    }
-
-    // Record transaction
-    await supabase.from('wallet_transactions').insert({
-      wallet_id: wallet.id,
-      amount: fine.amount,
-      transaction_type: 'debit',
-      description: `Fine Payment - ${fine.violation_type}`,
-      reference_id: fine.id,
-    });
-
-    // Update fine status
+    // Mark fine as paid
     const { error: fineError } = await supabase
       .from('fines')
       .update({ status: 'paid', paid_at: new Date().toISOString() })
@@ -79,12 +85,14 @@ export default function MyFines() {
     if (fineError) {
       toast.error('Failed to update fine status');
     } else {
-      toast.success('Fine paid successfully!');
+      const methodLabel = paymentMethod === 'wallet' ? 'Wallet' : paymentMethod === 'card' ? 'Credit/Debit Card' : 'UPI';
+      toast.success(`Fine paid successfully via ${methodLabel}!`);
       fetchFines();
     }
 
     setPaying(null);
     setConfirmFine(null);
+    setPaymentMethod('wallet');
   };
 
   const getStatusBadge = (status: string) => {
@@ -158,7 +166,7 @@ export default function MyFines() {
                   <span className="text-2xl font-bold text-destructive">₹{fine.amount}</span>
                   <Button
                     className="btn-glow"
-                    onClick={() => setConfirmFine(fine)}
+                    onClick={() => { setConfirmFine(fine); setPaymentMethod('wallet'); }}
                     disabled={paying === fine.id}
                   >
                     {paying === fine.id ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Pay Fine'}
@@ -201,22 +209,52 @@ export default function MyFines() {
         </GlassCard>
       )}
 
-      {/* Confirm Dialog */}
+      {/* Payment Selection Dialog */}
       <Dialog open={!!confirmFine} onOpenChange={() => setConfirmFine(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Fine Payment</DialogTitle>
+            <DialogTitle>Pay Fine</DialogTitle>
           </DialogHeader>
           {confirmFine && (
-            <div className="space-y-4 pt-4">
+            <div className="space-y-5 pt-2">
               <div className="p-4 rounded-lg bg-muted/30">
                 <p className="font-medium">{confirmFine.violation_type}</p>
                 <p className="text-2xl font-bold text-primary mt-2">₹{confirmFine.amount}</p>
-                <p className="text-xs text-muted-foreground mt-1">Will be deducted from your wallet</p>
               </div>
+
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Select Payment Method</Label>
+                <RadioGroup value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as PaymentMethod)} className="space-y-2">
+                  <label className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${paymentMethod === 'wallet' ? 'bg-primary/10 border-primary/40' : 'bg-muted/10 border-border hover:bg-muted/20'}`}>
+                    <RadioGroupItem value="wallet" id="wallet" />
+                    <Wallet className="h-5 w-5 text-primary" />
+                    <div className="flex-1">
+                      <p className="font-medium">Wallet</p>
+                      <p className="text-xs text-muted-foreground">Pay from your digital wallet balance</p>
+                    </div>
+                  </label>
+                  <label className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${paymentMethod === 'card' ? 'bg-primary/10 border-primary/40' : 'bg-muted/10 border-border hover:bg-muted/20'}`}>
+                    <RadioGroupItem value="card" id="card" />
+                    <CreditCard className="h-5 w-5 text-primary" />
+                    <div className="flex-1">
+                      <p className="font-medium">Credit / Debit Card</p>
+                      <p className="text-xs text-muted-foreground">Pay using Visa, Mastercard, RuPay</p>
+                    </div>
+                  </label>
+                  <label className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${paymentMethod === 'upi' ? 'bg-primary/10 border-primary/40' : 'bg-muted/10 border-border hover:bg-muted/20'}`}>
+                    <RadioGroupItem value="upi" id="upi" />
+                    <Smartphone className="h-5 w-5 text-primary" />
+                    <div className="flex-1">
+                      <p className="font-medium">UPI</p>
+                      <p className="text-xs text-muted-foreground">Pay using Google Pay, PhonePe, Paytm</p>
+                    </div>
+                  </label>
+                </RadioGroup>
+              </div>
+
               <Button className="w-full btn-glow" onClick={() => handlePayFine(confirmFine)} disabled={paying === confirmFine.id}>
                 {paying === confirmFine.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
-                {paying === confirmFine.id ? 'Processing...' : 'Confirm Payment'}
+                {paying === confirmFine.id ? 'Processing...' : `Pay ₹${confirmFine.amount} via ${paymentMethod === 'wallet' ? 'Wallet' : paymentMethod === 'card' ? 'Card' : 'UPI'}`}
               </Button>
             </div>
           )}

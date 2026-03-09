@@ -56,8 +56,9 @@ export default function AdminDashboard() {
   const activeAlerts = sosAlerts.filter(a => a.status === 'active').length;
   const pendingComplaints = complaints.filter(c => c.status === 'pending').length;
   const pendingReroutes = rerouteRequests.filter(r => r.status === 'pending').length;
-  const overcrowded = buses.filter(b => b.total_seats && (b.current_occupancy / b.total_seats) > 0.9);
-  const underutilized = buses.filter(b => b.total_seats && (b.current_occupancy / b.total_seats) < 0.3);
+  const TOTAL_CAPACITY = 70;
+  const overcrowded = buses.filter(b => (b.current_occupancy / TOTAL_CAPACITY) > 0.9);
+  const underutilized = buses.filter(b => (b.current_occupancy / TOTAL_CAPACITY) < 0.3);
 
   const QuickAction = ({ title, value, color, icon: Icon, onClick, subtitle }: any) => (
     <GlassCard className="cursor-pointer hover:border-primary/50 transition-all hover:scale-[1.02]" onClick={onClick}>
@@ -139,8 +140,8 @@ export default function AdminDashboard() {
               <div>
                 <p className="text-sm font-semibold text-destructive mb-2">🔴 Overcrowded ({overcrowded.length})</p>
                 {overcrowded.slice(0, 3).map((bus) => {
-                  const pct = Math.round((bus.current_occupancy / bus.total_seats) * 100);
-                  return (
+                  const pct = Math.round((bus.current_occupancy / TOTAL_CAPACITY) * 100);
+                    return (
                     <div key={bus.id} className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 mb-2 cursor-pointer hover:bg-destructive/20 transition-colors"
                       onClick={() => navigate('/dashboard/admin/fleet')}>
                       <div className="flex justify-between items-center">
@@ -158,8 +159,8 @@ export default function AdminDashboard() {
               <div>
                 <p className="text-sm font-semibold text-success mb-2">🟢 Underutilized ({underutilized.length})</p>
                 {underutilized.slice(0, 3).map((bus) => {
-                  const pct = Math.round((bus.current_occupancy / bus.total_seats) * 100);
-                  return (
+                  const pct = Math.round((bus.current_occupancy / TOTAL_CAPACITY) * 100);
+                    return (
                     <div key={bus.id} className="p-3 rounded-lg bg-success/10 border border-success/30 mb-2 cursor-pointer hover:bg-success/20 transition-colors"
                       onClick={() => navigate('/dashboard/admin/fleet')}>
                       <div className="flex justify-between items-center">
