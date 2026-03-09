@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Ticket, Users, CreditCard, QrCode, Wallet, Banknote, ArrowRight } from 'lucide-react';
+import { Ticket, Users, CreditCard, QrCode, Wallet, Banknote, ArrowRight, AlertTriangle } from 'lucide-react';
 import { StatCard } from '@/components/ui/stat-card';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,9 @@ import { toast } from 'sonner';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
+
+const TOTAL_CAPACITY = 70;
+const SEATED_CAPACITY = 40;
 
 const defaultStops = [
   'T. Nagar', 'Central', 'Egmore', 'Broadway', 'Parrys', 'Mylapore', 
@@ -36,8 +39,6 @@ export default function ConductorDashboard() {
 
   const loadData = async () => {
     if (!user) return;
-
-    // Get assigned bus
     const { data: busData } = await supabase
       .from('buses')
       .select('*, routes(route_number, route_name, stops)')
@@ -46,7 +47,6 @@ export default function ConductorDashboard() {
       .maybeSingle();
     if (busData) setBus(busData);
 
-    // Get today's tickets issued by this conductor
     const today = new Date().toISOString().split('T')[0];
     const { data: tickets } = await supabase
       .from('tickets')
@@ -90,29 +90,16 @@ export default function ConductorDashboard() {
     const expiresAt = new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString();
 
     const { data, error } = await supabase.from('tickets').insert({
-      ticket_code: ticketCode,
-      from_stop: fromStop,
-      to_stop: toStop,
-      fare,
-      payment_method: paymentMethod,
-      passenger_id: user.id,
-      issued_by: user.id,
-      bus_id: bus?.id || null,
-      route_id: bus?.route_id || null,
-      expires_at: expiresAt,
+      ticket_code: ticketCode, from_stop: fromStop, to_stop: toStop, fare,
+      payment_method: paymentMethod, passenger_id: user.id, issued_by: user.id,
+      bus_id: bus?.id || null, route_id: bus?.route_id || null, expires_at: expiresAt,
       qr_data: JSON.stringify({ code: ticketCode, from: fromStop, to: toStop, fare }),
     }).select().single();
 
-    if (error) {
-      toast.error('Failed to issue ticket');
-      return;
-    }
+    if (error) { toast.error('Failed to issue ticket'); return; }
 
-    // Update bus occupancy
     if (bus) {
-      await supabase.from('buses').update({
-        current_occupancy: bus.current_occupancy + 1,
-      }).eq('id', bus.id);
+      await supabase.from('buses').update({ current_occupancy: bus.current_occupancy + 1 }).eq('id', bus.id);
     }
 
     setIssuedTicket(data);
@@ -121,15 +108,24 @@ export default function ConductorDashboard() {
     loadData();
   };
 
-  const closeTicketDialog = () => {
-    setTicketIssued(false);
-    setFromStop('');
-    setToStop('');
-  };
+  const closeTicketDialog = () => { setTicketIssued(false); setFromStop(''); setToStop(''); };
 
   const occupancy = bus?.current_occupancy || 0;
-  const total = bus?.total_seats || 40;
-  const pct = Math.round((occupancy / total) * 100);
+  const seated = Math.min(occupancy, SEATED_CAPACITY);
+  const standing = Math.max(0, occupancy - SEATED_CAPACITY);
+  const pct = Math.round((occupancy / TOTAL_CAPACITY) * 100);
+
+  const handleReportOvercrowding = async () => {
+    if (!user || !bus) return;
+    await supabase.from('sos_alerts').insert({
+      reported_by: user.id,
+      reporter_role: 'conductor' as const,
+      sos_type: 'other' as const,
+      description: `Bus ${bus.bus_number} is overcrowded at ${occupancy}/${TOTAL_CAPACITY} passengers (${pct}% capacity). Seated: ${seated}, Standing: ${standing}.`,
+      bus_id: bus.id,
+    });
+    toast.success('Overcrowding alert sent to Admin!');
+  };
 
   return (
     <div className="space-y-6">
@@ -137,7 +133,7 @@ export default function ConductorDashboard() {
         <StatCard title="Tickets Issued" value={stats.ticketsIssued} icon={Ticket} />
         <StatCard title="Cash Revenue" value={stats.cashRevenue} prefix="₹" icon={Banknote} />
         <StatCard title="Digital Revenue" value={stats.digitalRevenue} prefix="₹" icon={CreditCard} />
-        <StatCard title="Bus Load" value={occupancy} suffix={`/${total}`} icon={Users} />
+        <StatCard title="Bus Load" value={occupancy} suffix={`/${TOTAL_CAPACITY}`} icon={Users} />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -210,46 +206,42 @@ export default function ConductorDashboard() {
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-muted-foreground">Passenger Load</span>
-                <span className="font-bold">{occupancy} / {total}</span>
+                <span className="font-bold">{occupancy} / {TOTAL_CAPACITY}</span>
               </div>
               <div className="h-4 rounded-full bg-muted overflow-hidden">
                 <motion.div
                   className={`h-full rounded-full ${pct > 90 ? 'bg-destructive' : pct > 70 ? 'bg-warning' : 'bg-success'}`}
                   initial={{ width: 0 }}
-                  animate={{ width: `${pct}%` }}
+                  animate={{ width: `${Math.min(pct, 100)}%` }}
                 />
               </div>
               <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                <span>Seated: {Math.min(occupancy, total)}</span>
-                <span>Standing: {Math.max(0, occupancy - total)}</span>
+                <span>Seated: {seated}/{SEATED_CAPACITY}</span>
+                <span>Standing: {standing}/{TOTAL_CAPACITY - SEATED_CAPACITY}</span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-lg bg-muted/30 text-center">
-                <p className="text-3xl font-bold text-success">{Math.min(occupancy, total)}</p>
+                <p className="text-3xl font-bold text-success">{seated}</p>
                 <p className="text-sm text-muted-foreground">Seated</p>
               </div>
               <div className="p-4 rounded-lg bg-muted/30 text-center">
-                <p className="text-3xl font-bold text-warning">{Math.max(0, occupancy - total)}</p>
+                <p className="text-3xl font-bold text-warning">{standing}</p>
                 <p className="text-sm text-muted-foreground">Standing</p>
               </div>
             </div>
 
-            {pct > 85 && (
-              <Button variant="outline" className="w-full" onClick={async () => {
-                if (!user) return;
-                await supabase.from('sos_alerts').insert({
-                  reported_by: user.id,
-                  reporter_role: 'conductor' as const,
-                  sos_type: 'other' as const,
-                  description: `Bus ${bus?.bus_number} is overcrowded at ${pct}% capacity`,
-                });
-                toast.success('Overcrowding alert sent to admin');
-              }}>
-                <Users className="mr-2 h-4 w-4" />Report Overcrowding
-              </Button>
-            )}
+            {/* Report Overcrowding Button — always visible when bus is at capacity */}
+            <Button
+              variant="outline"
+              className="w-full border-destructive/30 hover:bg-destructive/10"
+              onClick={handleReportOvercrowding}
+              disabled={!bus || occupancy < TOTAL_CAPACITY}
+            >
+              <AlertTriangle className="mr-2 h-4 w-4 text-destructive" />
+              Report Overcrowding
+            </Button>
           </div>
         </GlassCard>
       </div>

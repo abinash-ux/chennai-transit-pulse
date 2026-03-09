@@ -7,6 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+
+const TOTAL_CAPACITY = 70; // 40 seated + 30 standing
+const SEATED_CAPACITY = 40;
 
 export default function DriverDashboard() {
   const { user } = useAuth();
@@ -29,7 +33,6 @@ export default function DriverDashboard() {
         setBus(busData);
         setRoute((busData as any).routes);
 
-        // Count today's tickets for this bus
         const today = new Date().toISOString().split('T')[0];
         const { count } = await supabase
           .from('tickets')
@@ -39,7 +42,6 @@ export default function DriverDashboard() {
         setTodayTickets(count || 0);
       }
 
-      // Notifications as alerts
       const { data: notifs } = await supabase
         .from('notifications')
         .select('*')
@@ -52,18 +54,31 @@ export default function DriverDashboard() {
   }, [user]);
 
   const occupancy = bus?.current_occupancy || 0;
-  const total = bus?.total_seats || 40;
-  const pct = Math.round((occupancy / total) * 100);
+  const seated = Math.min(occupancy, SEATED_CAPACITY);
+  const standing = Math.max(0, occupancy - SEATED_CAPACITY);
+  const pct = Math.round((occupancy / TOTAL_CAPACITY) * 100);
   const stops = (route?.stops as string[]) || [];
   const currentStopIndex = stops.indexOf(bus?.next_stop || '') !== -1 
     ? stops.indexOf(bus?.next_stop || '') 
     : Math.floor(stops.length / 2);
 
+  const handleReportOvercrowding = async () => {
+    if (!user || !bus) return;
+    await supabase.from('sos_alerts').insert({
+      reported_by: user.id,
+      reporter_role: 'driver' as const,
+      sos_type: 'other' as const,
+      description: `Bus ${bus.bus_number} is overcrowded at ${occupancy}/${TOTAL_CAPACITY} passengers (${pct}% capacity). Seated: ${seated}, Standing: ${standing}.`,
+      bus_id: bus.id,
+    });
+    toast.success('Overcrowding alert sent to Admin!');
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Assigned Bus" value={bus?.bus_number || 'None'} icon={Bus} />
-        <StatCard title="Passengers" value={occupancy} suffix={`/${total}`} icon={Users} />
+        <StatCard title="Assigned Bus" value={bus?.bus_number || 'Not Assigned'} icon={Bus} />
+        <StatCard title="Passengers" value={occupancy} suffix={`/${TOTAL_CAPACITY}`} icon={Users} />
         <StatCard title="Today's Tickets" value={todayTickets} icon={Navigation} />
         <StatCard title="Occupancy" value={pct} suffix="%" icon={Clock} />
       </div>
@@ -105,27 +120,43 @@ export default function DriverDashboard() {
                     <span className="font-semibold">{route.estimated_time_mins} mins</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Occupancy</span>
+                    <span className="text-muted-foreground">Seated</span>
+                    <span className="font-semibold">{seated}/{SEATED_CAPACITY}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Standing</span>
+                    <span className="font-semibold">{standing}/{TOTAL_CAPACITY - SEATED_CAPACITY}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total Occupancy</span>
                     <span className={`font-semibold ${pct > 85 ? 'text-destructive' : pct > 70 ? 'text-warning' : 'text-success'}`}>
-                      {occupancy}/{total} ({pct}%)
+                      {occupancy}/{TOTAL_CAPACITY} ({pct}%)
                     </span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-semibold mb-3">Occupancy Level</h4>
-                <div className="relative h-32 flex items-end justify-center gap-2">
+                <h4 className="font-semibold mb-3">Capacity Breakdown</h4>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="p-3 rounded-lg bg-success/10 border border-success/20 text-center">
+                    <p className="text-2xl font-bold text-success">{seated}</p>
+                    <p className="text-xs text-muted-foreground">Seated</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-warning/10 border border-warning/20 text-center">
+                    <p className="text-2xl font-bold text-warning">{standing}</p>
+                    <p className="text-xs text-muted-foreground">Standing</p>
+                  </div>
+                </div>
+                <div className="relative h-24 flex items-end justify-center gap-2">
                   {[65, pct, Math.max(20, pct - 8), Math.min(100, pct + 5), Math.min(100, pct + 10), Math.max(20, pct - 2), pct].map((val, i) => (
                     <motion.div
                       key={i}
-                      className="w-8 rounded-t-md"
+                      className="w-7 rounded-t-md"
                       initial={{ height: 0 }}
                       animate={{ height: `${val}%` }}
                       transition={{ delay: i * 0.1 }}
-                      style={{
-                        background: val > 85 ? 'hsl(var(--warning))' : 'hsl(var(--primary))',
-                      }}
+                      style={{ background: val > 85 ? 'hsl(var(--warning))' : 'hsl(var(--primary))' }}
                     />
                   ))}
                 </div>
@@ -190,13 +221,18 @@ export default function DriverDashboard() {
       )}
 
       <div className="grid md:grid-cols-3 gap-4">
+        <Button
+          variant="outline"
+          className="h-20 flex-col gap-2 border-destructive/30 hover:bg-destructive/10"
+          onClick={handleReportOvercrowding}
+          disabled={!bus || occupancy < TOTAL_CAPACITY}
+        >
+          <Users className="h-6 w-6 text-destructive" />
+          <span>Report Overcrowding</span>
+        </Button>
         <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => window.location.href = '/dashboard/driver/sos'}>
           <AlertTriangle className="h-6 w-6 text-destructive" />
           <span>Report Emergency</span>
-        </Button>
-        <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => window.location.href = '/dashboard/driver/requests'}>
-          <Bus className="h-6 w-6 text-warning" />
-          <span>Request Backup</span>
         </Button>
         <Button variant="outline" className="h-20 flex-col gap-2" onClick={() => window.location.href = '/dashboard/driver/route'}>
           <MapPin className="h-6 w-6 text-primary" />
