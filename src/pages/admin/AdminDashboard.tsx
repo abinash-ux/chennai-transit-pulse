@@ -159,8 +159,8 @@ export default function AdminDashboard() {
               <div>
                 <p className="text-sm font-semibold text-success mb-2">🟢 Underutilized ({underutilized.length})</p>
                 {underutilized.slice(0, 3).map((bus) => {
-                  const pct = Math.round((bus.current_occupancy / bus.total_seats) * 100);
-                  return (
+                  const pct = Math.round((bus.current_occupancy / TOTAL_CAPACITY) * 100);
+                    return (
                     <div key={bus.id} className="p-3 rounded-lg bg-success/10 border border-success/30 mb-2 cursor-pointer hover:bg-success/20 transition-colors"
                       onClick={() => navigate('/dashboard/admin/fleet')}>
                       <div className="flex justify-between items-center">
