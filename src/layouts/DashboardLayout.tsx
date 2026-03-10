@@ -38,8 +38,9 @@ const passengerNavItems = [
   { to: '/dashboard/passenger/tickets', icon: Ticket, label: 'My Tickets' },
   { to: '/dashboard/passenger/wallet', icon: Wallet, label: 'Wallet' },
   { to: '/dashboard/passenger/pass', icon: CalendarDays, label: 'Monthly Pass' },
-  { to: '/dashboard/passenger/reroute', icon: AlertTriangle, label: 'Reroute Request' },
+  { to: '/dashboard/passenger/sos', icon: AlertTriangle, label: 'SOS Alerts' },
   { to: '/dashboard/passenger/complaints', icon: MessageSquare, label: 'Complaints' },
+  { to: '/dashboard/passenger/reroute', icon: Bus, label: 'Reroute Request' },
   { to: '/dashboard/passenger/fines', icon: Receipt, label: 'My Fines' },
 ];
 

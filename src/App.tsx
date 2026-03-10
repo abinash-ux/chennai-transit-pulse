@@ -17,6 +17,7 @@ import MonthlyPass from "./pages/passenger/MonthlyPass";
 import RerouteRequest from "./pages/passenger/RerouteRequest";
 import Complaints from "./pages/passenger/Complaints";
 import MyFines from "./pages/passenger/MyFines";
+import PassengerSOS from "./pages/passenger/PassengerSOS";
 import DriverDashboard from "./pages/driver/DriverDashboard";
 import DriverRoute from "./pages/driver/DriverRoute";
 import DriverSOS from "./pages/driver/DriverSOS";
@@ -61,6 +62,7 @@ const App = () => (
                 <Route path="passenger/wallet" element={<PassengerWallet />} />
                 <Route path="passenger/planner" element={<TripPlanner />} />
                 <Route path="passenger/pass" element={<MonthlyPass />} />
+                <Route path="passenger/sos" element={<PassengerSOS />} />
                 <Route path="passenger/reroute" element={<RerouteRequest />} />
                 <Route path="passenger/complaints" element={<Complaints />} />
                 <Route path="passenger/fines" element={<MyFines />} />

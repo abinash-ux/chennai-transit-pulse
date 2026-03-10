@@ -606,6 +606,20 @@ export default function AdminRouting() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* AI Logic Explanation Box */}
+      <div className="fixed bottom-4 right-4 z-20 max-w-xs">
+        <div className="p-4 rounded-xl bg-muted/80 backdrop-blur-sm border border-border shadow-lg">
+          <h4 className="font-display text-sm font-bold mb-2 flex items-center gap-1">
+            <Cpu className="h-4 w-4 text-primary" />AI Routing Logic
+          </h4>
+          <ul className="text-xs text-muted-foreground space-y-1">
+            <li>• Bus capacity = 40 seated + 30 standing = 70 total</li>
+            <li>• Route marked overcrowded when 3+ buses exceed 98% occupancy</li>
+            <li>• Underutilized buses are those below 30% capacity</li>
+            <li>• System recommends redeploying buses from underutilized routes</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

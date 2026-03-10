@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 interface StatCardProps {
   title: string;
-  value: number;
+  value: number | string;
   suffix?: string;
   prefix?: string;
   icon: LucideIcon;
@@ -34,7 +34,11 @@ export function StatCard({
         <div>
           <p className="text-sm text-muted-foreground mb-1">{title}</p>
           <div className="text-3xl font-display font-bold text-foreground">
-            <AnimatedCounter value={value} suffix={suffix} prefix={prefix} />
+            {typeof value === 'number' ? (
+              <AnimatedCounter value={value} suffix={suffix} prefix={prefix} />
+            ) : (
+              <span>{prefix}{value}{suffix}</span>
+            )}
           </div>
           {trend && (
             <p className={cn(

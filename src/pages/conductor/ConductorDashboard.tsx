@@ -99,12 +99,14 @@ export default function ConductorDashboard() {
     if (error) { toast.error('Failed to issue ticket'); return; }
 
     if (bus) {
-      await supabase.from('buses').update({ current_occupancy: bus.current_occupancy + 1 }).eq('id', bus.id);
+      const newOccupancy = (bus.current_occupancy || 0) + 1;
+      await supabase.from('buses').update({ current_occupancy: newOccupancy }).eq('id', bus.id);
+      setBus({ ...bus, current_occupancy: newOccupancy });
     }
 
     setIssuedTicket(data);
     setTicketIssued(true);
-    toast.success(`Ticket issued for ₹${fare}`);
+    toast.success(`Ticket issued for ₹${calculateFare()} — Passenger count updated`);
     loadData();
   };
 
