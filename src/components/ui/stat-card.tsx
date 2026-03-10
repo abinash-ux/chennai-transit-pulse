@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 interface StatCardProps {
   title: string;
-  value: number;
+  value: number | string;
   suffix?: string;
   prefix?: string;
   icon: LucideIcon;
