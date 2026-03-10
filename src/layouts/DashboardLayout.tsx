@@ -58,6 +58,9 @@ const conductorNavItems = [
   { to: '/dashboard/conductor/validate', icon: Ticket, label: 'Validate QR' },
   { to: '/dashboard/conductor/passengers', icon: User, label: 'Passenger Load' },
   { to: '/dashboard/conductor/revenue', icon: Receipt, label: 'Revenue' },
+  { to: '/dashboard/conductor/sos', icon: AlertTriangle, label: 'SOS Alerts' },
+  { to: '/dashboard/conductor/complaints', icon: MessageSquare, label: 'Complaints' },
+  { to: '/dashboard/conductor/reroute', icon: Bus, label: 'Reroute Request' },
 ];
 
 const inspectorNavItems = [
