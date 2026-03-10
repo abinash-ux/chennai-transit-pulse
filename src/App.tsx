@@ -62,6 +62,7 @@ const App = () => (
                 <Route path="passenger/wallet" element={<PassengerWallet />} />
                 <Route path="passenger/planner" element={<TripPlanner />} />
                 <Route path="passenger/pass" element={<MonthlyPass />} />
+                <Route path="passenger/sos" element={<PassengerSOS />} />
                 <Route path="passenger/reroute" element={<RerouteRequest />} />
                 <Route path="passenger/complaints" element={<Complaints />} />
                 <Route path="passenger/fines" element={<MyFines />} />
