@@ -28,6 +28,9 @@ import ConductorIssueTicket from "./pages/conductor/ConductorIssueTicket";
 import ConductorValidate from "./pages/conductor/ConductorValidate";
 import ConductorPassengers from "./pages/conductor/ConductorPassengers";
 import ConductorRevenue from "./pages/conductor/ConductorRevenue";
+import ConductorSOS from "./pages/conductor/ConductorSOS";
+import ConductorComplaints from "./pages/conductor/ConductorComplaints";
+import ConductorReroute from "./pages/conductor/ConductorReroute";
 import InspectorDashboard from "./pages/inspector/InspectorDashboard";
 import InspectorCheckTicket from "./pages/inspector/InspectorCheckTicket";
 import InspectorIssueFine from "./pages/inspector/InspectorIssueFine";
@@ -78,6 +81,9 @@ const App = () => (
                 <Route path="conductor/validate" element={<ConductorValidate />} />
                 <Route path="conductor/passengers" element={<ConductorPassengers />} />
                 <Route path="conductor/revenue" element={<ConductorRevenue />} />
+                <Route path="conductor/sos" element={<ConductorSOS />} />
+                <Route path="conductor/complaints" element={<ConductorComplaints />} />
+                <Route path="conductor/reroute" element={<ConductorReroute />} />
                 {/* Inspector */}
                 <Route path="inspector" element={<InspectorDashboard />} />
                 <Route path="inspector/check" element={<InspectorCheckTicket />} />
