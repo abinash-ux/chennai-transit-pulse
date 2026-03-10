@@ -56,17 +56,25 @@ export default function ConductorIssueTicket() {
 
     const ticketCode = `TKT-${Date.now()}`;
     const expiresAt = new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString();
+
+    // Get conductor's assigned bus
+    const { data: busData } = await supabase
+      .from('buses')
+      .select('id, current_occupancy, route_id')
+      .eq('conductor_id', user.id)
+      .eq('status', 'active')
+      .maybeSingle();
     
-    // We need a passenger_id - for conductor-issued tickets, use a placeholder approach
-    // In a real system, conductor would scan passenger's ID
     const { data, error } = await supabase.from('tickets').insert({
       ticket_code: ticketCode,
       from_stop: fromStop,
       to_stop: toStop,
       fare,
       payment_method: paymentMethod,
-      passenger_id: user.id, // conductor-issued, tracked by issued_by
+      passenger_id: user.id,
       issued_by: user.id,
+      bus_id: busData?.id || null,
+      route_id: busData?.route_id || null,
       expires_at: expiresAt,
       qr_data: JSON.stringify({ code: ticketCode, from: fromStop, to: toStop, fare }),
     }).select().single();
@@ -76,9 +84,16 @@ export default function ConductorIssueTicket() {
       return;
     }
 
+    // Increment bus occupancy
+    if (busData) {
+      await supabase.from('buses').update({ 
+        current_occupancy: (busData.current_occupancy || 0) + 1 
+      }).eq('id', busData.id);
+    }
+
     setIssuedTicket(data);
     setTicketIssued(true);
-    toast.success(`Ticket issued for ₹${fare}`);
+    toast.success(`Ticket issued for ₹${fare} — Passenger count updated`);
     loadRecentTickets();
   };
 
