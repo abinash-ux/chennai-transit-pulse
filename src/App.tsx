@@ -17,6 +17,7 @@ import MonthlyPass from "./pages/passenger/MonthlyPass";
 import RerouteRequest from "./pages/passenger/RerouteRequest";
 import Complaints from "./pages/passenger/Complaints";
 import MyFines from "./pages/passenger/MyFines";
+import PassengerSOS from "./pages/passenger/PassengerSOS";
 import DriverDashboard from "./pages/driver/DriverDashboard";
 import DriverRoute from "./pages/driver/DriverRoute";
 import DriverSOS from "./pages/driver/DriverSOS";
