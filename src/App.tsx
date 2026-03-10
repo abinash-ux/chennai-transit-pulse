@@ -81,6 +81,9 @@ const App = () => (
                 <Route path="conductor/validate" element={<ConductorValidate />} />
                 <Route path="conductor/passengers" element={<ConductorPassengers />} />
                 <Route path="conductor/revenue" element={<ConductorRevenue />} />
+                <Route path="conductor/sos" element={<ConductorSOS />} />
+                <Route path="conductor/complaints" element={<ConductorComplaints />} />
+                <Route path="conductor/reroute" element={<ConductorReroute />} />
                 {/* Inspector */}
                 <Route path="inspector" element={<InspectorDashboard />} />
                 <Route path="inspector/check" element={<InspectorCheckTicket />} />
