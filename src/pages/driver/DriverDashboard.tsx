@@ -53,10 +53,10 @@ export default function DriverDashboard() {
     load();
   }, [user]);
 
-  const occupancy = bus?.current_occupancy || 0;
+  const occupancy = bus?.current_occupancy ?? 0;
   const seated = Math.min(occupancy, SEATED_CAPACITY);
   const standing = Math.max(0, occupancy - SEATED_CAPACITY);
-  const pct = Math.round((occupancy / TOTAL_CAPACITY) * 100);
+  const pct = TOTAL_CAPACITY > 0 ? Math.round((occupancy / TOTAL_CAPACITY) * 100) : 0;
   const stops = (route?.stops as string[]) || [];
   const currentStopIndex = stops.indexOf(bus?.next_stop || '') !== -1 
     ? stops.indexOf(bus?.next_stop || '') 
