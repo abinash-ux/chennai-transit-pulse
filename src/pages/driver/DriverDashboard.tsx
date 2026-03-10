@@ -77,9 +77,9 @@ export default function DriverDashboard() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Assigned Bus" value={0} suffix={bus?.bus_number || 'Not Assigned'} icon={Bus} />
+        <StatCard title="Assigned Bus" value={bus?.bus_number || 'Not Assigned'} icon={Bus} />
         <StatCard title="Passengers" value={occupancy} suffix={`/${TOTAL_CAPACITY}`} icon={Users} />
-        <StatCard title="Route" value={0} suffix={route?.route_number || 'N/A'} icon={MapPin} />
+        <StatCard title="Route" value={route?.route_number || 'N/A'} icon={MapPin} />
         <StatCard title="Occupancy" value={pct} suffix="%" icon={Clock} />
       </div>
 
