@@ -11,18 +11,19 @@ export const DEMO_ACCOUNTS: Array<{
   email: string;
   fullName: string;
   dashboard: string;
+  id: string;
 }> = [
-  { role: 'passenger', email: 'passenger@demo.com', fullName: 'Demo Passenger', dashboard: '/dashboard/passenger' },
-  { role: 'driver', email: 'driver@demo.com', fullName: 'Demo Driver', dashboard: '/dashboard/driver' },
-  { role: 'conductor', email: 'conductor@demo.com', fullName: 'Demo Conductor', dashboard: '/dashboard/conductor' },
-  { role: 'inspector', email: 'inspector@demo.com', fullName: 'Demo Inspector', dashboard: '/dashboard/inspector' },
-  { role: 'admin', email: 'admin@demo.com', fullName: 'Demo Admin', dashboard: '/dashboard/admin' },
+  { role: 'passenger', email: 'passenger@demo.com', fullName: 'Demo Passenger', dashboard: '/dashboard/passenger', id: '10000000-0000-4000-8000-000000000001' },
+  { role: 'driver', email: 'driver@demo.com', fullName: 'Demo Driver', dashboard: '/dashboard/driver', id: '10000000-0000-4000-8000-000000000002' },
+  { role: 'conductor', email: 'conductor@demo.com', fullName: 'Demo Conductor', dashboard: '/dashboard/conductor', id: '10000000-0000-4000-8000-000000000003' },
+  { role: 'inspector', email: 'inspector@demo.com', fullName: 'Demo Inspector', dashboard: '/dashboard/inspector', id: '10000000-0000-4000-8000-000000000004' },
+  { role: 'admin', email: 'admin@demo.com', fullName: 'Demo Admin', dashboard: '/dashboard/admin', id: '10000000-0000-4000-8000-000000000005' },
 ];
 
 const DEMO_STORAGE_KEY = 'smart-chennai-demo-user';
 
 const createDemoUser = (account: (typeof DEMO_ACCOUNTS)[number]) => ({
-  id: `demo-${account.role}`,
+  id: account.id,
   aud: 'authenticated',
   role: 'authenticated',
   email: account.email,
@@ -163,6 +164,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (demoAccount) {
       if (password !== DEMO_PASSWORD) {
         return { error: { message: 'Demo password is 123456' } };
+      }
+
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email: demoAccount.email, password });
+        if (!error) {
+          localStorage.removeItem(DEMO_STORAGE_KEY);
+          return { error: null };
+        }
+      } catch {
+        // Continue with offline demo login so every dashboard stays accessible.
       }
 
       applyDemoAccount(demoAccount);
