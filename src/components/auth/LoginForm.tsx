@@ -5,7 +5,7 @@ import { Mail, Lock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/lib/auth';
+import { DEMO_ACCOUNTS, DEMO_PASSWORD, useAuth } from '@/lib/auth';
 import { toast } from 'sonner';
 
 export function LoginForm() {
@@ -14,6 +14,10 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
+
+  const selectedDemoAccount = DEMO_ACCOUNTS.find(
+    (account) => account.email.toLowerCase() === email.trim().toLowerCase()
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +29,25 @@ export function LoginForm() {
       toast.error(error.message || 'Failed to sign in');
     } else {
       toast.success('Welcome back!');
-      navigate('/dashboard');
+      navigate(selectedDemoAccount?.dashboard || '/dashboard');
+    }
+
+    setLoading(false);
+  };
+
+  const handleDemoLogin = async (demoEmail: string) => {
+    setEmail(demoEmail);
+    setPassword(DEMO_PASSWORD);
+    setLoading(true);
+
+    const account = DEMO_ACCOUNTS.find((item) => item.email === demoEmail);
+    const { error } = await signIn(demoEmail, DEMO_PASSWORD);
+
+    if (error) {
+      toast.error(error.message || 'Failed to sign in');
+    } else {
+      toast.success(`${account?.fullName || 'Demo user'} logged in`);
+      navigate(account?.dashboard || '/dashboard');
     }
 
     setLoading(false);
@@ -85,6 +107,31 @@ export function LoginForm() {
           'Sign In'
         )}
       </Button>
+
+      <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-3">
+        <div>
+          <p className="text-sm font-semibold text-foreground">Demo dashboard logins</p>
+          <p className="text-xs text-muted-foreground">Password for all demo accounts: {DEMO_PASSWORD}</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {DEMO_ACCOUNTS.map((account) => (
+            <Button
+              key={account.role}
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-auto justify-start py-2 text-left"
+              disabled={loading}
+              onClick={() => handleDemoLogin(account.email)}
+            >
+              <span className="flex flex-col items-start leading-tight">
+                <span className="font-semibold capitalize">{account.role}</span>
+                <span className="text-[11px] text-muted-foreground">{account.email}</span>
+              </span>
+            </Button>
+          ))}
+        </div>
+      </div>
     </motion.form>
   );
 }
