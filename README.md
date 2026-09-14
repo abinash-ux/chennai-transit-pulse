@@ -1,359 +1,987 @@
-# Chennai Transit Command
+# Chennai Transit Pulse
 
-SMART CHENNAI AI PUBLIC TRANSPORT MANAGEMENT SYSTEM
+## AI-Assisted Smart Bus Operations and Safety Management Framework
 
-FULL DASHBOARD FUNCTIONALITY + UI REDESIGN PROMPT
+Chennai Transit Pulse is a web-based AI-assisted public transportation
+management and safety platform designed to support intelligent bus operations,
+passenger services, fleet utilization, complaint management, ticket
+management, emergency response, and administrative decision-making.
 
-Upgrade the existing Smart Chennai AI Public Transport Management System.
+The platform integrates multiple transportation stakeholders into a unified
+role-based system:
 
-Do not rebuild the project from scratch.
-Keep the current system structure but fix all dashboards, implement missing logic, and upgrade the design.
+- Passengers
+- Drivers
+- Conductors
+- Inspectors
+- Administrators
+- Control-room personnel
 
-All dashboards must become fully functional, not just UI placeholders.
+Instead of treating ticketing, passenger services, fleet monitoring, complaints,
+bus allocation, and emergency response as independent systems, Chennai Transit
+Pulse connects these operational functions through a centralized platform.
 
-Every button must execute real logic and update the system state across dashboards.
+The project was developed as a functional research prototype to demonstrate
+AI-assisted decision support for smart public transportation operations.
 
-🎨 COMPLETE UI / THEME REDESIGN
+---
 
-The current design is too simple. Replace it with a massive premium smart-city dashboard design.
+# 1. Project Overview
 
-Design requirements:
+Urban public transportation systems face several operational challenges,
+including:
 
-• Dark smart mobility theme
-• Deep blue + cyan gradient palette
-• Glassmorphism dashboard panels
-• Chennai skyline animated background
-• Moving bus animation in landing page
-• Interactive dark map with glowing bus markers
-• Sidebar navigation with icons
-• Animated counters
-• Smooth hover animations
-• Modern typography
-• Enterprise dashboard layout
+- Bus overcrowding
+- Underutilization of available buses
+- Uneven passenger demand
+- Manual fleet-management decisions
+- Passenger complaints
+- Ticket-management difficulties
+- Emergency-response coordination
+- Limited communication between transportation stakeholders
 
-The system must look like a government smart transport control center.
+Chennai Transit Pulse addresses these challenges through a centralized
+smart transportation management framework.
 
-👤 PASSENGER DASHBOARD (FINAL VERSION)
+The platform combines passenger-facing services with operational dashboards
+and an AI-assisted decision-support layer.
 
-Ensure all passenger features work correctly.
+The overall system follows the workflow:
+
+
+Passenger & Operational Data
+            |
+            v
+    Centralized Database
+            |
+            v
+ Operational Monitoring
+            |
+            v
+ AI-Assisted Analysis
+            |
+            v
+ Recommendations / Alerts
+            |
+            v
+ Administrator Review
+            |
+            v
+ Operational Action
+            |
+            v
+ Updated Transportation State
+2. Main Objectives
+
+The system is designed to:
+
+Provide centralized public transportation management.
+Improve passenger access to bus and route information.
+Support digital ticketing and ticket verification.
+Monitor passenger occupancy.
+Identify overcrowded and underutilized buses.
+Support adaptive bus reallocation.
+Assist administrators with AI-generated recommendations.
+Digitize complaint management.
+Provide coordinated emergency/SOS management.
+Connect passengers and transportation personnel through
+role-specific dashboards.
+Maintain synchronized operational information across the platform.
+3. System Architecture
+
+The platform uses a role-based architecture connected through a centralized
+backend.
+
+                         CHENNAI TRANSIT PULSE
+                                  |
+        -----------------------------------------------------
+        |          |          |          |         |         |
+        v          v          v          v         v         v
+   Passenger    Driver   Conductor   Inspector   Admin   Control Room
+        |          |          |          |         |         |
+        -----------------------------------------------------
+                                  |
+                                  v
+                         Centralized Backend
+                                  |
+                    ----------------------------
+                    |                          |
+                    v                          v
+               PostgreSQL              Authentication
+                                  |
+                                  v
+                     AI-Assisted Decision Support
+                                  |
+             ------------------------------------------
+             |                    |                   |
+             v                    v                   v
+       Occupancy Analysis   Complaints          Emergency
+             |
+             v
+      Bus Reallocation
+       Recommendations
+4. Role-Based Dashboards
+
+The system provides separate interfaces for each major transportation
+stakeholder.
+
+4.1 Passenger Dashboard
+
+The Passenger Dashboard is the primary passenger-facing interface.
 
 Live Bus Tracking
 
-• Interactive Chennai map
-• Search bus number
-• Search route
-• Show moving buses
-• Show occupancy %
+Passengers can:
 
+Search buses by bus number.
+Search buses by route.
+View available buses.
+Monitor bus occupancy.
+View bus movement information.
+Access transportation information through an interactive map.
 Smart Trip Planner
 
-Passenger enters:
-• From stop
-• To stop
+Passengers can enter:
 
-System must show:
+Starting stop
+Destination stop
 
-• Direct buses
-• Connecting buses
-• Travel time
-• Fare calculation
+The system can provide:
 
-Ticket Purchase (FIXED)
+Direct bus options
+Connecting bus options
+Estimated travel information
+Fare information
+Digital Ticketing
 
-Enable ticket buying.
+Passengers can:
 
-Steps:
+Select the origin stop.
+Select the destination stop.
+Calculate the applicable fare.
+Pay using the available wallet/payment mechanism.
+Generate a digital QR ticket.
+Store purchased tickets in ticket history.
 
-Select From stop
+Ticket information is stored in the centralized system so that it can
+subsequently be checked by transportation personnel.
 
-Select To stop
+Wallet
 
-System calculates fare
+The passenger wallet provides:
 
-Wallet payment
-
-Generate QR ticket
-
-Save ticket to history
-
-Update bus occupancy
-
-Wallet System
-
-• Add funds
-• View transactions
-• Deduct ticket payment
-
+Wallet balance
+Add-funds functionality
+Transaction history
+Ticket-payment deductions
 Monthly Pass
 
-• Buy pass
-• Show validity
-• Allow conductor validation
+Passengers can:
 
-Rerouting Request (MAIN FEATURE)
+Purchase a monthly pass.
+View pass validity.
+Present the pass for conductor verification.
+Complaints
 
-Passenger submits overcrowded bus request.
+Passengers can submit transportation-related complaints such as:
 
-Form includes:
+Bus did not stop
+Rude conductor
+Rude driver
+Cleanliness problems
+Other transportation-related issues
 
-• Bus number
-• Upload proof image
-• Description
+Complaint information is transferred to the administrative workflow for
+review and resolution.
 
-Status must update as:
+Rerouting Request
 
-Pending → Under Review → Approved → Rejected
+Passengers can submit a request when they experience overcrowding or
+transportation problems.
 
-If approved:
+The request can include:
 
-• Passenger gets notification
-• Route updated
+Bus number
+Description
+Supporting image/proof
 
-Complaint System
+The request follows a controlled status workflow:
 
-Passenger can report:
+Pending
+   |
+   v
+Under Review
+   |
+   +--------+
+   |        |
+ Approved  Rejected
+   |
+   v
+Passenger Notification
+Fine Management
 
-• Bus didn’t stop
-• Rude conductor
-• Rude driver
-• Cleanliness issue
+When an inspector issues a transportation fine:
 
-Fine Payment
+The fine becomes visible to the passenger.
+Fine information can be reviewed.
+Payment can be recorded through the passenger system.
+The updated payment state can be reflected in the relevant administrative
+records.
+Passenger SOS
 
-If inspector issues fine:
+Passengers can submit emergency alerts.
 
-• Fine appears in passenger dashboard
-• Passenger can pay fine
-• Inspector dashboard updates
+Emergency information is forwarded to the administrative/control-room
+interface for response and resolution.
 
-🧑‍✈️ DRIVER DASHBOARD (MAKE FULLY WORKING)
+5. Driver Dashboard
 
-Currently only overview works. Implement full features.
+The Driver Dashboard provides operational information required by drivers.
 
-Route Module
+Route Information
 
-Driver must see:
+Drivers can view:
 
-• Bus number
-• Current route
-• Next stops
-• Passenger occupancy
+Assigned bus
+Bus number
+Current route
+Next stops
+Current passenger occupancy
+Operational information
+Route Change Notifications
 
-Route Change Alert
+When an administrator approves a bus-route reassignment, the driver can
+receive the corresponding operational notification.
 
-When admin reroutes bus:
+The system can display:
 
-• Driver receives notification
-• Shows old route vs new route
-
+Previous Route
+      |
+      v
+Approved Route Change
+      |
+      v
+New Route
 Driver SOS
 
-Driver can send emergency alerts:
+Drivers can report emergencies such as:
 
-• Mechanical issue
-• Accident
-• Security issue
+Mechanical problems
+Accidents
+Security issues
+Other operational emergencies
 
-Admin receives alert.
+The alert is transmitted to the administrative/control-room workflow.
 
-Driver Request Module
+Additional Bus Request
 
-Driver can request additional bus for overcrowded route.
+Drivers can request additional transportation capacity when a route is
+experiencing excessive passenger demand.
 
-Request goes to Admin AI routing panel.
+The request can be considered by the administrative AI-assisted routing
+workflow.
 
 Driver Analytics
 
-Show:
+The dashboard provides operational information such as:
 
-• Trips completed
-• Passenger load average
-• Distance covered
+Trips completed
+Average passenger load
+Distance covered
+Other available operational indicators
+6. Conductor Dashboard
 
-🎫 CONDUCTOR DASHBOARD (MAKE FULLY WORKING)
-
-Currently most modules do not work.
+The Conductor Dashboard supports onboard passenger and ticket operations.
 
 Ticket Issuing
 
-Conductor must be able to:
+Conductors can:
 
-• Select From stop
-• Select To stop
-• Calculate fare
-• Record payment (cash/digital)
-• Increase bus occupancy
+Select the origin stop.
+Select the destination stop.
+Calculate the fare.
+Record the payment method.
+Issue the ticket.
+Update passenger-load information.
 
+Payment types can include:
+
+Cash
+Digital payment
 QR Ticket Validation
 
-Conductor scans QR ticket and validates it.
+Conductors can validate passenger QR tickets and verify their ticket
+information.
 
 Monthly Pass Validation
 
-Conductor verifies passenger pass.
+Conductors can verify the validity of passenger monthly passes.
 
-Passenger Load Monitor
+Passenger Load Monitoring
 
-Display:
+The conductor interface provides passenger-load information including:
 
-• Seats filled
-• Standing passengers
-
+Seats occupied
+Standing passengers
+Overall occupancy
+Available capacity
 Revenue Analytics
 
-Charts showing:
+The dashboard can provide revenue information such as:
 
-• Cash revenue
-• Digital revenue
-• Pass usage
+Cash revenue
+Digital revenue
+Pass usage
+Overcrowding Reporting
 
-Overcrowding Alert
+Conductors can report overcrowding conditions to the administrative
+decision-support system.
 
-Conductor reports overcrowded bus to Admin AI system.
+This information can contribute to the identification of routes requiring
+additional transportation capacity.
 
-🕵️ INSPECTOR DASHBOARD (MAKE FULLY WORKING)
+Emergency Reporting
 
-Currently most columns are not functional.
+Conductors can also submit emergency alerts to the control-room/admin
+workflow.
 
-Passenger Ticket Check
+7. Inspector Dashboard
 
-Inspector can:
+The Inspector Dashboard supports transportation compliance and ticket
+inspection.
 
-• Search passenger
-• Validate ticket
-• Validate pass
+Passenger Ticket Validation
 
-Issue Fine
+Inspectors can:
 
-Inspector must:
+Search passenger records.
+Check digital tickets.
+Verify ticket validity.
+Verify monthly passes.
+Fine Management
 
-• Select passenger
-• Choose violation
-• Enter fine amount
-• Set payment deadline
+Inspectors can issue fines by recording:
 
-Fine appears in passenger dashboard.
+Passenger
+Violation type
+Fine amount
+Payment deadline
+Fine status
+
+The fine information becomes available through the passenger and administrative
+systems.
 
 Fine Analytics
 
-Charts showing:
+The dashboard provides information such as:
 
-• Total fines issued
-• Paid fines
-• Pending fines
-• Fine revenue
-
+Total fines issued
+Paid fines
+Pending fines
+Fine revenue
 Inspector Reports
 
-Inspector generates report and sends to Admin.
+Inspectors can generate operational inspection information and submit reports
+to the administrative system.
 
-👨‍💼 ADMIN DASHBOARD (FULL CONTROL CENTER)
+8. Administrator Dashboard
 
-Ensure all modules work properly.
+The Administrator Dashboard acts as the central operational control center.
 
-Fleet Monitoring
+It provides access to:
 
-Replace static chart with real map.
+Fleet monitoring
+AI-assisted routing
+Bus occupancy analysis
+Revenue analytics
+Complaint management
+Emergency/SOS management
+Operational monitoring
+Transportation decision support
+9. Fleet Monitoring
 
-Admin can:
+The administrator can monitor the transportation fleet through the
+administrative interface.
 
-• View all buses
-• Search bus number
-• See occupancy
+The system provides information about:
 
-AI Routing System (IMPORTANT)
+Bus numbers
+Routes
+Current occupancy
+Bus availability
+Operational status
 
-Create three panels.
+The fleet-monitoring interface is designed to support centralized monitoring
+of transportation operations.
 
-1️⃣ Underutilized buses (<30% occupancy)
-2️⃣ Overcrowded buses (≥98% occupancy)
-3️⃣ AI suggestions
+10. AI-Assisted Decision Support
 
-AI suggestion logic:
+The AI-assisted decision-support layer is one of the central components of
+Chennai Transit Pulse.
 
-If 3 buses on same route within 20–30 minutes are ≥98% full,
-then show suggestion:
+The system analyzes operational information such as:
 
-“Route requires additional bus.”
+Passenger demand
+Bus occupancy
+Available capacity
+Route information
+Complaint information
+Bus availability
 
-Admin Rerouting Action
+The purpose of the AI layer is to assist transportation administrators rather
+than independently control the transportation network.
 
-Admin must:
+Operational Data
+       |
+       v
+AI-Assisted Analysis
+       |
+       v
+Recommendation
+       |
+       v
+Administrator Review
+       |
+   +---+---+
+   |       |
+Approve   Reject
+   |
+   v
+Operational Action
 
-Review overcrowded route
+The administrator remains responsible for the final operational decision.
 
-Check empty buses
+11. Overcrowded Bus Detection
 
-Click Reassign Route
+The system monitors passenger occupancy to identify buses experiencing
+high passenger loads.
 
-System must update:
+An operational overcrowding threshold can be configured according to the
+transportation scenario.
 
-• Driver dashboard
-• Conductor dashboard
-• Passenger live tracking
-• Passenger notification
+The prototype uses the following decision-support rule:
 
-Revenue Analytics
+Occupancy >= 98%
+        |
+        v
+Overcrowded Bus
 
-Working charts for:
+The system identifies buses meeting the configured overcrowding condition
+and provides this information to the administrative decision-support
+interface.
 
-• Ticket revenue
-• Pass revenue
-• Fine revenue
+12. Underutilized Bus Detection
 
-Complaint Management
+Buses with low passenger occupancy can be identified as underutilized.
 
-Admin sees passenger complaints and resolves them.
+The prototype uses:
 
-SOS Control Center
+Occupancy < 30%
+        |
+        v
+Underutilized Bus
 
-Admin sees emergency alerts from:
+These buses can be considered as potential resources for adaptive
+reallocation when another route experiences excessive passenger demand.
 
-• Passenger
-• Driver
-• Conductor
+13. AI-Assisted Dynamic Bus Reallocation
 
-Admin marks alerts resolved.
+Dynamic Bus Reallocation is designed to improve the utilization of available
+bus capacity.
 
-🔁 GLOBAL SYSTEM SYNCHRONIZATION
+The system considers operational information including:
 
-Every system action must update all dashboards.
+Current occupancy
+Passenger demand
+Route information
+Bus availability
+Complaint information
+Operational conditions
 
-Examples:
+The AI-assisted system identifies:
 
-Ticket issued → Bus occupancy updated everywhere
-Fine issued → Passenger + Inspector updated
-Fine paid → Inspector analytics updated
-Route changed → Driver + Conductor dashboards update
+Overcrowded Route
+       +
+Available / Underutilized Bus
+       |
+       v
+AI Recommendation
+       |
+       v
+Administrator Review
+       |
+       v
+Reassign Bus
 
-🎯 FINAL REQUIREMENT
+For the prototype decision-support scenario, when multiple buses operating on
+the same route within a defined time window reach the overcrowding threshold,
+the system can generate an operational recommendation such as:
 
-After upgrade the system must:
+Route requires additional bus.
 
-• Have all dashboards fully functional
-• Have working analytics
-• Have synchronized system logic
-• Have AI routing functionality
-• Have premium smart-city design
-• Look like a real Chennai transport authority platform
+The administrator can review the recommendation and approve or reject the
+proposed reassignment.
 
-This project was built with [Lovable](https://lovable.dev).
+14. Route Reassignment Workflow
 
-## Build with Lovable
+When an administrator approves a reassignment:
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/da51f944-b932-45b7-9dee-232104879274).
+Overcrowded Route
+       |
+       v
+Identify Available Bus
+       |
+       v
+AI Recommendation
+       |
+       v
+Administrator Approval
+       |
+       v
+Route Reassignment
+       |
+       +------------------+
+       |                  |
+       v                  v
+Driver Dashboard    Conductor Dashboard
+       |
+       v
+Passenger Information
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+The updated operational state is reflected in the relevant dashboards.
 
-## Development
+15. Complaint Management
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+The complaint-management module provides a centralized workflow for
+transportation-related passenger complaints.
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+Passenger Complaint
+        |
+        v
+Complaint Database
+        |
+        v
+AI-Assisted Priority / Analysis
+        |
+        v
+Administrator Review
+        |
+        v
+Resolution / Status Update
+
+Administrators can review complaints and update their status.
+
+This connects passenger feedback with administrative decision-making.
+
+16. Emergency and SOS Control Center
+
+The emergency-management module supports coordinated handling of emergency
+events.
+
+SOS alerts can originate from:
+
+Passengers
+Drivers
+Conductors
+
+Emergency alerts are forwarded to the administrative/control-room interface.
+
+The control center can:
+
+View emergency alerts
+Review alert information
+Identify the source
+Assess urgency
+Update the emergency status
+Mark incidents as resolved
+
+The emergency workflow provides a centralized mechanism for responding to
+transportation incidents.
+
+17. Ticket Management
+
+The ticket-management system connects passenger ticket purchase with
+transportation personnel.
+
+Passenger
+    |
+    v
+Ticket Purchase
+    |
+    v
+Central Database
+    |
+    +-------------------+
+    |                   |
+    v                   v
+Conductor          Inspector
+Validation         Verification
+
+The system supports:
+
+Ticket generation
+QR-based ticket information
+Ticket history
+Ticket verification
+Payment recording
+Inspection
+18. Fine Management Workflow
+Inspector
+    |
+    v
+Ticket Inspection
+    |
+    v
+Violation Identified
+    |
+    v
+Fine Issued
+    |
+    v
+Passenger Dashboard
+    |
+    v
+Fine Payment
+    |
+    v
+Updated Fine Status
+
+Fine information can also contribute to administrative revenue analytics.
+
+19. Revenue Analytics
+
+The platform provides operational revenue information.
+
+The administrative and relevant staff dashboards can display:
+
+Digital ticket revenue
+Cash ticket revenue
+Monthly-pass revenue
+Fine revenue
+Overall revenue indicators
+
+These analytics support transportation management and operational monitoring.
+
+20. Global System Synchronization
+
+A key design principle of Chennai Transit Pulse is synchronization between
+different operational modules.
+
+Examples include:
+
+Ticket Issued
+Ticket Issued
+     |
+     +--> Passenger Ticket History
+     |
+     +--> Bus Occupancy
+     |
+     +--> Revenue Data
+     |
+     +--> Conductor Records
+Fine Issued
+Fine Issued
+     |
+     +--> Passenger Dashboard
+     |
+     +--> Inspector Records
+     |
+     +--> Administrative Analytics
+Fine Paid
+Fine Payment
+     |
+     +--> Passenger Fine Status
+     |
+     +--> Inspector Analytics
+     |
+     +--> Fine Revenue
+Route Changed
+Route Reassignment
+     |
+     +--> Driver Dashboard
+     |
+     +--> Conductor Dashboard
+     |
+     +--> Passenger Information
+     |
+     +--> Fleet Monitoring
+SOS Alert
+SOS Alert
+     |
+     +--> Administrative Dashboard
+     |
+     +--> Control Room
+     |
+     +--> Emergency Status
+21. Database and Data Management
+
+The platform uses a centralized database architecture for storing and
+synchronizing transportation information.
+
+Operational data can include:
+
+User information
+Passenger information
+Bus information
+Routes
+Stops
+Tickets
+Payments
+Wallet transactions
+Monthly passes
+Complaints
+Fines
+SOS alerts
+Passenger occupancy
+Driver/conductor operational information
+AI recommendations
+Route reassignment information
+
+Centralized data management allows information generated by one module to
+become available to other relevant modules.
+
+22. Authentication and Role-Based Access
+
+The platform separates transportation operations according to user roles.
+
+Different users receive different dashboards and permissions.
+
+User Authentication
+        |
+        v
+Role Identification
+        |
+   +----+----+---------+---------+---------+
+   |         |         |         |         |
+Passenger  Driver  Conductor  Inspector  Admin
+
+This role-based approach prevents all users from accessing the same
+operational functions.
+
+23. Technology Stack
+Frontend
+React
+TypeScript
+Vite
+Tailwind CSS
+Backend
+Supabase
+PostgreSQL
+Supabase Authentication
+Data Management
+PostgreSQL database
+Centralized operational records
+Role-based access control
+Development and Version Control
+Lovable
+GitHub
+Git-based version control
+24. Research Prototype and Evaluation
+
+Chennai Transit Pulse was developed as a functional web-based research
+prototype.
+
+Because live transportation-authority infrastructure and real-time
+operational datasets were not available, the framework was evaluated through
+simulated operational scenarios.
+
+The evaluation scenarios include:
+
+Passenger ticket purchase
+Ticket inspection
+Complaint submission and processing
+Overcrowded-bus detection
+Underutilized-bus identification
+AI-assisted dynamic bus reallocation
+SOS emergency reporting
+Multi-role transportation operations
+
+The prototype evaluation demonstrates the functional integration of the
+major transportation modules and the feasibility of the proposed centralized
+framework.
+
+The prototype should not be interpreted as a full-scale deployment in the
+Chennai public transportation network.
+
+25. Research Contribution
+
+The primary contribution of the project is the integration of multiple public
+transportation functions into a unified AI-assisted operational framework.
+
+The framework combines:
+
+Passenger services
+Digital ticketing
+Bus occupancy monitoring
+AI-assisted decision support
+Dynamic bus reallocation
+Complaint management
+Ticket inspection
+Fine management
+Emergency response
+Role-based transportation dashboards
+
+The AI component is designed as a decision-support mechanism that provides
+recommendations to human transportation administrators rather than replacing
+human operational control.
+
+26. Project Structure
+chennai-transit-pulse/
+│
+├── public/
+│
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── layouts/
+│   ├── hooks/
+│   ├── lib/
+│   └── ...
+│
+├── supabase/
+│   └── ...
+│
+├── package.json
+├── package-lock.json
+├── .gitignore
+└── README.md
+
+The exact structure may evolve as the prototype is developed.
+
+27. Running the Project
+Prerequisites
+
+Install:
+
+Node.js
+npm
+Clone the Repository
+git clone https://github.com/abinash-ux/chennai-transit-pulse.git
+Enter the Project
+cd chennai-transit-pulse
+Install Dependencies
+npm install
+Start the Development Server
 npm run dev
-```
+
+The local development URL will be displayed by the Vite development server.
+
+28. Environment Configuration
+
+The application uses environment variables for connecting to backend
+services.
+
+Sensitive credentials should never be committed to the repository.
+
+Create a local environment file containing the required project configuration
+provided by the development environment.
+
+Example:
+
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+VITE_SUPABASE_PROJECT_ID=your_project_id
+
+Never publish private database credentials, service-role keys, passwords,
+private API keys, or other sensitive secrets.
+
+29. Demonstration
+
+The system contains role-specific dashboards that demonstrate the proposed
+smart transportation workflow.
+
+Passenger
+
+Passenger services, ticketing, route planning, complaints, wallet, passes,
+tracking, and emergency reporting.
+
+Driver
+
+Assigned route, occupancy, route-change notifications, analytics, requests,
+and emergency reporting.
+
+Conductor
+
+Ticket issuing, ticket validation, passenger-load monitoring, revenue
+analytics, overcrowding reporting, and emergency reporting.
+
+Inspector
+
+Ticket/pass validation, fine issuance, fine analytics, and inspection
+reporting.
+
+Administrator / Control Room
+
+Fleet monitoring, AI-assisted routing, bus allocation, complaints, revenue,
+and emergency management.
+
+30. Source Code
+
+The source code for the research prototype is maintained in this GitHub
+repository:
+
+https://github.com/abinash-ux/chennai-transit-pulse
+
+The repository is synchronized with the Lovable development environment.
+
+31. Development Platform
+
+This project was developed using the Lovable platform and synchronized with
+GitHub for source-code management and version control.
+
+Lovable was used as a development environment; the research contribution
+concerns the proposed smart public transportation framework, system
+architecture, operational workflows, AI-assisted decision support, and
+prototype implementation.
+
+32. Limitations
+
+The current implementation is a research prototype and has several
+limitations.
+
+The system has not been deployed across a live city-wide bus network.
+Real-time transportation-authority operational data were not available for
+the prototype evaluation.
+Simulation scenarios were used for functional evaluation.
+Real-world GPS, IoT passenger-counting devices, and live traffic feeds are
+not part of the current prototype.
+Large-scale field validation remains future work.
+33. Future Development
+
+Future versions may incorporate:
+
+Real-time GPS integration
+IoT-based passenger counting
+Real-time traffic information
+Machine-learning-based passenger demand forecasting
+Bus arrival-time prediction
+Traffic-aware route optimization
+Cloud-scale transportation analytics
+Predictive maintenance
+Automated scheduling
+Real-world transportation authority integration
+
+These extensions would enable evaluation using live operational transportation
+data.
+
+34. Academic Context
+
+This repository supports the research work entitled:
+
+AI-Assisted Smart Bus Operations and Safety Management Framework
+
+The project focuses on intelligent public transportation management through
+the integration of passenger services, AI-assisted operational decision
+support, dynamic bus reallocation, complaint management, ticket management,
+and emergency response.
+
+Status
+
+Project Type: Research Prototype
+Domain: Smart Cities / Intelligent Transportation Systems
+Application Area: Public Bus Transportation
+Development: Web-based Prototype
+AI Role: Operational Decision Support
+Backend: Supabase / PostgreSQL
+Version Control: GitHub
+
